@@ -106,7 +106,6 @@ server <- function(input, output, session) {
         colnames(estimates)[2+i]=paste("(", v$cutoffs[i-1], ",", v$cutoffs[i],"]")
       }
     }
-    #colnames(estimates)[3]=expression(beta_p)
     estimates
    })
 

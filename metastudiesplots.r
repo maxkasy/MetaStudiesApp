@@ -27,8 +27,8 @@ metastudies_plot<-function(X,sigma){
     scale_y_continuous(expand = c(0,0), limits = c(0,rangeX/critval))+
     theme(legend.position="top",
           #aspect.ratio=1,
-          panel.grid.minor = element_blank(),
-          panel.background = element_rect(fill = "grey98", colour = NA))
+          #panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "grey95", colour = NA))
   
 }
 
@@ -66,8 +66,8 @@ z_histogram=function(X,sigma){
     xlab('Z')+
     ylab('Density')+
     xlim(c(min(edges),max(edges)))+
-    theme(panel.grid.minor = element_blank(),
-          panel.background = element_rect(fill = "grey98", colour = NA))
+    theme(#panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "grey95", colour = NA))
   
 }
 
@@ -94,8 +94,8 @@ estimates_plot<-function(X, sigma, cutoffs, symmetric, estimates){
     geom_line(size=2, color="blue") +
     facet_grid(variable ~ .,  scales = "free_y") +
     expand_limits(y = 0) +
-    theme(panel.grid.minor = element_blank(),
-          panel.background = element_rect(fill = "grey98", colour = NA))
+    theme(#panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "grey95", colour = NA))
   
 
 }
