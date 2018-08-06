@@ -1,6 +1,5 @@
 # to upload, run rsconnect::deployApp('MetaStudiesApp')
 library(shiny)
-
 rm(list = ls())
 source("metastudiesfunctions.r")
 source("metastudiesplots.r")
@@ -17,24 +16,24 @@ ui <- fluidPage(
       hr(),
       h3("Model parameters"),
       fluidRow(
-        column(6, checkboxInput("symmetric", "Symmetric p(.)", value = TRUE),
+        column(6, checkboxInput("symmetric", "Symmetric p(.)", value = FALSE),
                   checkboxGroupInput("cutoffs", "Cutoffs for p(.)",
                                         choiceNames = c("1.65", "1.96","2.33"),
                                         choiceValues = c(1.645, 1.960, 2.326),
                                   selected = 1.960)),
         column(6, radioButtons("modelmu", "Model for the distribution of effects",
-                               choices = c("Normal" = 1 #,
-                                              #"Student-t" = 2,
+                               choices = c("Normal" = "normal",
+                                           "Student-t" = "t" #,
                                               #"nonparametric" = 3
                                            ),
-                                           selected = 1))
+                                           selected = "normal"))
       ),
       #hr(),
       actionButton(inputId = "estimatebutton", label = "Estimate model")
     ),
     
     mainPanel(
-      h2("Funnel plot, histogram", align = "center"),
+      h2("Funnel plot, histogram of z-stats", align = "center"),
       fluidRow(splitLayout(cellWidths = c("50%", "50%"), 
                     plotOutput("funnel"),
                     plotOutput("hist")))
@@ -42,6 +41,7 @@ ui <- fluidPage(
   ),
   hr(),
   h2("Model estimates", align = "center"),
+  h4("Distribution of true effects, conditional publication proabilities", align = "center"),
   column(12, align="center",
          tableOutput("estimatestable"),
          plotOutput("estplot", width = "70%")
@@ -75,38 +75,20 @@ server <- function(input, output, session) {
   observeEvent(input$estimatebutton,{
     v$cutoffs=as.numeric(unlist(input$cutoffs))
     v$symmetric=input$symmetric
+    v$modelmu=input$modelmu
     if (!v$symmetric) v$cutoffs= c(-rev(v$cutoffs), 0 ,v$cutoffs)
     
-    v$estimates=metastudies_estimation(v$X,v$sigma,v$cutoffs, v$symmetric)
+    v$estimates=metastudies_estimation(v$X,v$sigma,v$cutoffs, v$symmetric, model= v$modelmu)
     
     output$estplot = renderPlot({
-        estimates_plot(v$X,v$sigma,v$cutoffs, v$symmetric,v$estimates)
+        estimates_plot(v$X,v$sigma,v$cutoffs, v$symmetric,v$estimates, model= v$modelmu)
     })
   })
   
   #render estimates to table
   output$estimatestable =  renderTable(rownames=TRUE,hover=TRUE,digits=3,
    {req(v$estimates)
-    l=length(v$estimates$Psihat)
-    estimates=matrix(0,2,l)
-    estimates[1,]=v$estimates$Psihat
-    estimates[2,]=v$estimates$SE
-    rownames(estimates)=c("estimate", "standard error")
-    colnames(estimates)=rep(" ",l)
-    colnames(estimates)[1]=intToUtf8(956) #mu
-    colnames(estimates)[2]=intToUtf8(964) #tau
-    if (v$symmetric){
-      colnames(estimates)[3]=paste("[0,", v$cutoffs[1],"]")
-      for (i in seq(2, length(v$cutoffs), length=max(0, length(v$cutoffs) - 1))) {
-        colnames(estimates)[2+i]=paste("(", v$cutoffs[i-1], ",", v$cutoffs[i],"]")
-      }
-    } else {
-      colnames(estimates)[3]=paste("(-", intToUtf8(8734), ",", v$cutoffs[1],"]")
-      for (i in seq(2, length(v$cutoffs), length=max(0, length(v$cutoffs) - 1))) {
-        colnames(estimates)[2+i]=paste("(", v$cutoffs[i-1], ",", v$cutoffs[i],"]")
-      }
-    }
-    estimates
+    estimatestable(v$estimates$Psihat, v$estimates$SE, v$cutoffs, v$symmetric, v$modelmu)
    })
 
 

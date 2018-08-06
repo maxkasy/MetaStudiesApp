@@ -47,8 +47,8 @@ z_histogram=function(X,sigma){
                                     to=uu2,
                                     by=0.32));
     } else {
-      uu2<-max(ceiling((uu-.68)/.64,0))*.64+.68;
-      ll2<-min(floor((ll+.68)/.64,0))*.64-.68;
+      uu2<-ceiling(max((uu-.68)/.64,0))*.64+.68;
+      ll2<-floor(min((ll+.68)/.64,0))*.64-.68;
       edges<-c(seq(from=ll2,
                    to=-0.68,
                    by=0.64), 0, seq(from=0.68,
@@ -72,19 +72,22 @@ z_histogram=function(X,sigma){
 }
 
 
-estimates_plot<-function(X, sigma, cutoffs, symmetric, estimates){
+estimates_plot<-function(X, sigma, cutoffs, symmetric, estimates, model="normal"){
   
   n=500
   Psihat=estimates$Psihat
   rangeZ=3 
   dens=data.frame(z=seq(-rangeZ,rangeZ,length.out =n))
-
+  shift=as.integer(model=="t")
   
   Tpowers=Tpowers_fun(dens$z,cutoffs,symmetric)
-  betap=as.vector(c(Psihat[-c(1,2)],  1))
+  betap=as.vector(c(Psihat[-(1:(2+shift))],  1))
   dens$p=Tpowers%*%betap  
   
-  dens$f=dnorm(dens$z, mean=Psihat[1], sd=Psihat[2])
+  if (model=="t") df=Psihat[3]
+    else df=Inf
+  
+  dens$f=dt(((dens$z - Psihat[1])/ Psihat[2]), df=df)/Psihat[2]
   names(dens)[names(dens) == 'f'] <- 'density of true effect'
   names(dens)[names(dens) == 'p'] <- 'publication probability'
   
