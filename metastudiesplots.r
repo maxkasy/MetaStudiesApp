@@ -97,6 +97,7 @@ estimates_plot<-function(X, sigma, cutoffs, symmetric, estimates, model="normal"
     geom_line(size=2, color="blue") +
     facet_grid(variable ~ .,  scales = "free_y") +
     expand_limits(y = 0) +
+    scale_x_continuous(breaks =-3:3) +
     theme(#panel.grid.minor = element_blank(),
           panel.background = element_rect(fill = "grey95", colour = NA))
   
