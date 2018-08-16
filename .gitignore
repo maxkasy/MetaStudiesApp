@@ -1,5 +1,4 @@
-backup*
-rsconnect/*
-.Rhistory
+backup*/
+rsconnect/
 .Rhistory
 rsconnect/shinyapps.io/maxkasy/MetaStudiesApp.dcf
