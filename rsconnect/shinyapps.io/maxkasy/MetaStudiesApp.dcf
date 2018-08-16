@@ -5,8 +5,9 @@ account: maxkasy
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 395085
-bundleId: 1518449
+bundleId: 1521115
 url: https://maxkasy.shinyapps.io/MetaStudiesApp/
-when: 1533411817.48833
+when: 1533577685.58935
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: backupAug5/app.r|backupAug5/debug.r|backupAug5/metastudiesfunctions.r|backupAug5/metastudiesplots.r|backupAug5/RobustVariance.r
