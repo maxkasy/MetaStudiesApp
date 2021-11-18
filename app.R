@@ -18,8 +18,8 @@ ui <- fluidPage(
       fluidRow(
         column(6, checkboxInput("symmetric", "Symmetric p(.)", value = FALSE),
                   checkboxGroupInput("cutoffs", "Cutoffs for p(.)",
-                                        choiceNames = c("1.65", "1.96","2.33"),
-                                        choiceValues = c(1.645, 1.960, 2.326),
+                                        choiceNames = c("1.65", "1.96","2.58"),
+                                        choiceValues = c(1.645, 1.960, 2.576),
                                   selected = 1.960)),
         column(6, radioButtons("modelmu", "Model for the distribution of effects",
                                choices = c("Normal" = "normal",

@@ -7,7 +7,7 @@ critval=1.96
 metastudies_plot<-function(X,sigma){
   n=length(X)
   significant<-(abs(X/sigma)>critval)
-  nooutlier= (sigma<30*mean(sigma))&(abs(X) < 30*abs(X));
+  nooutlier= (sigma<30*mean(sigma))&(abs(X) < 30*mean(abs(X)));
   dat<-data.frame(X, sigma, as.factor(significant&nooutlier))
   names(dat)=c("xvar", "yvar","significant")
   rangeX=1.1*max(max(abs(X)), max(abs(sigma[nooutlier]))*critval)
